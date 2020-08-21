@@ -9,3 +9,6 @@ class Todo_Items(models.Model):
                                 null=True          
                             )
     content = models.CharField(max_length=1000)
+
+    def __str__(self):
+        return self.content
