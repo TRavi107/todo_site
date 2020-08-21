@@ -1,1 +1,17 @@
 {%extends '_base.html'%}
+
+{% block contents%}
+    <form method="GET" class="form-inline my-2 my-lg-0 justify-content-center">
+        <input class="form-control mr-sm-2" type="search" placeholder="Add Items" aria-label="Search">
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Add</button>
+    </form>
+    <br>
+    {%for item in object_list%}
+
+        <div class="mx-auto card border-success mb-3" style="max-width: 18rem;">
+            <div class="text-left card-body text-success">
+            <h6 >{{item.content}}</h6>
+            </div>
+        </div>
+    {% endfor %}
+  {% endblock%}
