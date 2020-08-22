@@ -16,6 +16,7 @@
   <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.11.2/css/all.css">
   <!-- Bootstrap core CSS -->
   <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/comments/comments.css' %}" rel="stylesheet">
   <!-- Material Design Bootstrap -->
   <link href="{% static 'css/mdb.min.css' %}" rel="stylesheet">
   <!-- Your custom styles (optional) -->
@@ -86,6 +87,34 @@
         <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
       </form>
+      <div class="dropdown">
+        <img class="dropdown-toggle d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Image Description" id="dropdownMenuLink" data-toggle="dropdown">
+        <div class="dropdown-menu bg-dark " aria-labelledby="dropdownMenuLink">
+          <div class="dropdown-item" >
+            <i class="fas fa-cog text-light"></i>
+          </div>
+          {% if request.user.is_authenticated %}
+          <div class="dropdown-item ">
+            <i class="fas fa-user text-light"></i>
+          </div>
+          <div class="dropdown-item text-light">
+            <a href="{% url 'account_logout' %}">
+              <i class="fas fa-sign-out-alt text-light"></i>
+            </a>
+          </div>
+          {% else %}
+          <div class="dropdown-item">
+            <a href="{% url 'account_login' %}"></a>
+              <i class="fas fa-sign-in-alt text-light"></i>
+            </a>
+          </div>
+          <div class="dropdown-item text-light">
+            <a href="{% url 'account_signup' %}">
+              <i class="fas fa-user-plus text-light"></i>
+            </a>
+          </div>
+          {% endif %}
+      </div>
     </div>
   </nav>
 
