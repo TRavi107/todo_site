@@ -1,19 +1,29 @@
 from django.shortcuts import render,redirect
 from django.http import JsonResponse
-from django.views.generic import View,ListView
+from django.views.generic import View,ListView,DetailView
 from django.contrib import messages
 from django.shortcuts import  get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 
-from .models import Todo_Items
+from .models import Todo_Items,Todo_card
 from .forms import Todo_form
 
 
 # Create your views here.
 
 class HomeView(ListView):
-    model =Todo_Items
+    model =Todo_card
     template_name = 'home.html'
+
+    def get_context_data(self,*args,**kwargs):
+        context = super().get_context_data(*args,**kwargs)
+        todo_items =Todo_Items.objects.all()
+        context['todo_items']=todo_items
+        return context
+
+class CardDetailView(DetailView):
+    model =Todo_Items
+    template_name = 'detailview.html'
 
     def get_context_data(self,*args,**kwargs):
         context = super().get_context_data(*args,**kwargs)

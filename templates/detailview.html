@@ -1,0 +1,65 @@
+{%extends '_base.html'%}
+
+{% block contents%}
+    <form action="{% url 'core:home' %}" id="add-form" method="POST" class="form-inline my-2 my-lg-0 justify-content-center">
+        {% csrf_token %}
+        {{form.contents}}
+        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Add</button>
+    </form>
+    <br>
+    <div class="main-contents">
+    {%for item in object_list%}
+        <div id="{{item.id}}main" class="mx-auto card border-success mb-3" style="max-width: 18rem;">
+            <p data-toggle="collapse" data-target="#collapseExample{{item.id}}" id="{{item.id}}content" class="text-dark ml-3 mt-1 mb-1">{{item.content}}
+            </p> 
+            <div id="{{item.id}}icons">
+                <div class="collapse text-right" id="collapseExample{{item.id}}">
+                    <i id="{{item.id}}check" data-url="{{item.get_check_url}}" onclick="action('check',{{item.id}})" class="fas fa-check-circle mr-1"></i>
+                    <i id="{{item.id}}edit" data-url="{{item.get_edit_url}}" onclick="action('edit',{{item.id}})" class="fas fa-edit mr-1"></i> 
+                    <i id="{{item.id}}delete" data-url="{{item.get_delete_url}}" onclick="action('delete',{{item.id}})" class="fas fa-times mr-1"></i>
+                </div>
+            </div>
+        </div>
+    {% endfor %}
+    </div>
+{% endblock%}
+
+{% block script %}
+<script>
+    function action(action,id){
+        const action_btn = document.getElementById(id+action)
+        const url = action_btn.getAttribute('data-url')
+        const content = document.getElementById(id+'content')
+        const main = document.getElementById(id+'main')
+        const form = document.getElementById('add-form')
+        const  icons = document.getElementById(id+'icons')
+        $.ajax({
+            type:'GET',
+            url:url,
+            success:function(response){
+                if (response.action=='check'){
+
+                    if (response.checked){
+                        content.innerHTML = '<s>'+response.content+'</s>'
+                    }
+                    else{
+                        content.innerHTML = response.content
+                    }
+                }
+                if(response.action=='edit'){
+                    main.innerHTML = '<input type="text" placeholder="'+response.content+'">' +icons.innerHTML
+                }
+
+                if(response.action =='delete'){
+                    main.remove()
+                    console.log("Cksaks")
+                }
+                
+            },
+            error:function(error){
+              
+            }
+          })
+    }
+</script>
+{% endblock %}

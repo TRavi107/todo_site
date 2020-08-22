@@ -1,64 +1,44 @@
 {%extends '_base.html'%}
 
 {% block contents%}
-    <form action="{% url 'core:home' %}" id="add-form" method="POST" class="form-inline my-2 my-lg-0 justify-content-center">
-        {% csrf_token %}
-        {{form.contents}}
-        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Add</button>
-    </form>
-    <br>
-    <div class="main-contents">
-    {%for item in object_list%}
-        <div id="{{item.id}}main" class="mx-auto card border-success mb-3" style="max-width: 18rem;">
-            <p data-toggle="collapse" data-target="#collapseExample{{item.id}}" id="{{item.id}}content" class="text-dark ml-3 mt-1 mb-1">{{item.content}}
-            </p> 
-            <div id="{{item.id}}icons">
-                <div class="collapse text-right" id="collapseExample{{item.id}}">
-                    <i id="{{item.id}}check" data-url="{{item.get_check_url}}" onclick="action('check',{{item.id}})" class="fas fa-check-circle mr-1"></i>
-                    <i id="{{item.id}}edit" data-url="{{item.get_edit_url}}" onclick="action('edit',{{item.id}})" class="fas fa-edit mr-1"></i> 
-                    <i id="{{item.id}}delete" data-url="{{item.get_delete_url}}" onclick="action('delete',{{item.id}})" class="fas fa-times mr-1"></i>
-                </div>
+    <a href="">
+        {% if object_list.count == 0 %}
+        <div class="text-center">
+        <svg width="5em" height="5em" viewBox="0 0 16 16" class="bi bi-plus-square" fill="dark" xmlns="http://www.w3.org/2000/svg">
+            <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"/>
+            <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z"/>
+            <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+        </svg>
+        </div>
+        {%else %}
+        <div class="text-center">
+            <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-plus-square" fill="dark" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"/>
+                <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z"/>
+                <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+            </svg>
+        {% endif %}
+
+    </a>
+    <div class="row bootstrap snippets bootdeys">
+        {% for card in object_list %}
+        <div class="col-md-4 col-sm-6 content-card">
+            <div class="card-big-shadow">
+                <a href="{{card.get_detail_url}}">
+                    <div class="card card-just-text" data-background="color" data-color="blue" data-radius="none">
+                        <div class="content">
+                            <h4 class="title"><a href="{{card.get_detail_url}}">{{card.title}}</a></h4>
+                            {% for item in todo_items|slice:":3" %}
+                                {% if item.card.id == card.id %}
+                                    <p class="description">{{item.content}} </p>
+                                {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div> <!-- end card -->
+                </a>
             </div>
         </div>
-    {% endfor %}
+        {% endfor %}
     </div>
+
 {% endblock%}
-
-{% block script %}
-<script>
-    function action(action,id){
-        const action_btn = document.getElementById(id+action)
-        const url = action_btn.getAttribute('data-url')
-        const content = document.getElementById(id+'content')
-        const main = document.getElementById(id+'main')
-        const form = document.getElementById('add-form')
-        const  icons = document.getElementById(id+'icons')
-        $.ajax({
-            type:'GET',
-            url:url,
-            success:function(response){
-                if (response.action=='check'){
-
-                    if (response.checked){
-                        content.innerHTML = '<s>'+response.content+'</s>'
-                    }
-                    else{
-                        content.innerHTML = response.content
-                    }
-                }
-                if(response.action=='edit'){
-                    main.innerHTML = '<input type="text" placeholder="'+response.content+'">' +icons.innerHTML
-                }
-
-                if(response.action =='delete'){
-                    main.remove()
-                }
-                
-            },
-            error:function(error){
-              
-            }
-          })
-    }
-</script>
-{% endblock %}

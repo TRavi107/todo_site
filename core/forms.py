@@ -6,4 +6,5 @@ class Todo_form(forms.Form):
         'placeholder':'Add Items',
         'name':'contents'
     }))
+
     
