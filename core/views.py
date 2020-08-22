@@ -2,6 +2,8 @@ from django.shortcuts import render,redirect
 from django.http import JsonResponse
 from django.views.generic import View,ListView
 from django.contrib import messages
+from django.shortcuts import  get_object_or_404
+from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Todo_Items
 from .forms import Todo_form
@@ -29,7 +31,7 @@ class HomeView(ListView):
 
             else:
                 user = None
-            todo_items = Todo_Items(content=contents,user=user)
+            todo_items = Todo_Items(content=contents,user=user,checked=False)
             todo_items.save()
             data = {
                 'contents':contents,
@@ -41,3 +43,42 @@ class HomeView(ListView):
         messages.info(self.request,"Something wrong")
         return redirect('.')
     
+
+def todo_actions(request,id,action):
+    try:
+        item = get_object_or_404(Todo_Items,id=id)
+        if action=='check':
+            if item.checked :
+                item.checked = False
+
+            else :
+                item.checked = True
+            item.save()
+            data ={
+                'id':item.id,
+                'action':'check',
+                'content':item.content,
+                'checked':item.checked
+            }
+
+        if action=='edit':
+            data ={
+                'id':item.id,
+                'action':'edit',
+                'content':item.content,
+                'checked':item.checked
+            }
+        if action=='delete':
+            data={
+                'action':'delete'
+            }
+            item.delete()
+        return JsonResponse(data)
+
+    except ObjectDoesNotExist:
+        pass
+    
+    print(item.checked)
+    return JsonResponse()
+
+
