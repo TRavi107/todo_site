@@ -22,30 +22,24 @@ class HomeView(ListView):
         return context
 
 class CardDetailView(DetailView):
-    model =Todo_Items
+    model =Todo_card
     template_name = 'detailview.html'
 
     def get_context_data(self,*args,**kwargs):
         context = super().get_context_data(*args,**kwargs)
+        context['todo_items']=Todo_Items.objects.all().filter(card=self.get_object())
         form = Todo_form
         context['form'] = form
-
         return context
 
     def post(self,*args,**kwargs):
         form = Todo_form(self.request.POST or None)
         if form.is_valid():
             contents = form.cleaned_data.get('contents')
-            if self.request.user !=None:
-                user = self.request.user
-
-            else:
-                user = None
-            todo_items = Todo_Items(content=contents,user=user,checked=False)
+            todo_items = Todo_Items(content=contents,checked=False,card=self.get_object())
             todo_items.save()
             data = {
                 'contents':contents,
-                'user':todo_items.user.username,
                 'id':todo_items.id,
             }
             return JsonResponse(data)

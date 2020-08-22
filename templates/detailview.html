@@ -1,14 +1,14 @@
 {%extends '_base.html'%}
 
 {% block contents%}
-    <form action="{% url 'core:home' %}" id="add-form" method="POST" class="form-inline my-2 my-lg-0 justify-content-center">
+    <form action="{{object.get_detail_url}}" id="add-form" method="POST" class="form-inline my-2 my-lg-0 justify-content-center">
         {% csrf_token %}
         {{form.contents}}
         <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Add</button>
     </form>
     <br>
     <div class="main-contents">
-    {%for item in object_list%}
+    {%for item in todo_items%}
         <div id="{{item.id}}main" class="mx-auto card border-success mb-3" style="max-width: 18rem;">
             <p data-toggle="collapse" data-target="#collapseExample{{item.id}}" id="{{item.id}}content" class="text-dark ml-3 mt-1 mb-1">{{item.content}}
             </p> 
