@@ -1,44 +1,86 @@
 {%extends '_base.html'%}
 
 {% block contents%}
-    <a href="">
+    
         {% if object_list.count == 0 %}
-        <div class="text-center">
+    <div class="text-center">
+    <a href="{% url 'core:create' %}">
         <svg width="5em" height="5em" viewBox="0 0 16 16" class="bi bi-plus-square" fill="dark" xmlns="http://www.w3.org/2000/svg">
             <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"/>
             <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z"/>
             <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
         </svg>
+    </a>
         </div>
         {%else %}
         <div class="text-center">
+        <a href="{% url 'core:create' %}">
             <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-plus-square" fill="dark" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"/>
                 <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z"/>
                 <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
             </svg>
+        </a>
+        </div>
         {% endif %}
 
-    </a>
-    <div class="row bootstrap snippets bootdeys">
+    <div id="all-card" class="row bootstrap snippets bootdeys">
         {% for card in object_list %}
-        <div class="col-md-4 col-sm-6 content-card">
+        <div class="col-lg-3 col-md-4 col-sm-6 content-card ">
             <div class="card-big-shadow">
-                <a href="{{card.get_detail_url}}">
-                    <div class="card card-just-text" data-background="color" data-color="blue" data-radius="none">
-                        <div class="content">
-                            <h4 class="title"><a href="{{card.get_detail_url}}">{{card.title}}</a></h4>
-                            {% for item in todo_items|slice:":3" %}
-                                {% if item.card.id == card.id %}
-                                    <p class="description">{{item.content}} </p>
-                                {% endif %}
-                            {% endfor %}
-                        </div>
+                    <div class="card card-just-text" data-background="color" data-color="green" data-radius="none">
+                            <div class="content">
+                                
+                                <h4 data-url="{{card.get_update_title_url}}" id="{{card.id}}title" onclick="edit_title({{card.id}})" class="title">{{card.title}}</h4>
+                                
+                                <a href="{{card.get_detail_url}}">
+
+                                <div>
+                                {% for item in todo_items %}
+                                    {% if item.card.id == card.id %}
+                                        <p class="description">
+                                                {{item.content}} 
+                                        </p>
+                                    {% endif %}
+                                {% endfor %}
+                                <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-plus-square" fill="dark" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"/>
+                                    <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z"/>
+                                    <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
+                                </svg>
+                                </div>
+                            </a>
+                            </div>
+                        
                     </div> <!-- end card -->
-                </a>
             </div>
         </div>
         {% endfor %}
     </div>
 
 {% endblock%}
+{% block script %}
+<script>
+    function edit_title(id){
+        const title_div = document.getElementById(id+'title')
+        const text = title_div.innerHTML
+        const text_edt = document.createElement('div')
+        text_edt.innerHTML = '<form id="edit-title" method="POST" class="form-inline my-2 my-lg-0 justify-content-center">{% csrf_token %}<input name="title" placeholder="'+text+ '"><input type="hidden" name="id" value="'+id+'"></form>'
+        title_div.replaceWith(text_edt)
+        console.log(text_edt)
+    }
+
+function add_card(url){
+    const all_card = document.getElementById('all-card')
+    $.ajax({
+        url:url,
+        success:function(response){
+            console.log(all_card)
+        },
+        error:function(error){
+          console.log(error)
+        }
+      })
+}
+</script>
+{% endblock %}

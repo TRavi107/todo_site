@@ -21,6 +21,17 @@ class HomeView(ListView):
         context['todo_items']=todo_items
         return context
 
+    def post(self,*args,**kwargs):
+        if 'title' in self.request.POST:
+            title = self.request.POST.get("title")
+            id = self.request.POST.get("id")
+            obj = get_object_or_404(Todo_card,id=id)
+            obj.title = title
+            obj.slug = title+str(id)
+            obj.save()
+
+        return redirect('.')
+
 class CardDetailView(DetailView):
     model =Todo_card
     template_name = 'detailview.html'
@@ -46,7 +57,14 @@ class CardDetailView(DetailView):
 
         messages.info(self.request,"Something wrong")
         return redirect('.')
-    
+
+
+def create_card(request):
+    card = Todo_card(user=request.user)
+    card.save()
+    card.slug = card.title + str(Todo_card.objects.count())
+    card.save()
+    return redirect('/')
 
 def todo_actions(request,id,action):
     try:

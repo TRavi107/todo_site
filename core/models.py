@@ -5,9 +5,7 @@ from django.shortcuts import reverse
 # Create your models here.
 class Todo_card(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
-                                on_delete=models.CASCADE,
-                                blank = True,
-                                null=True          
+                                on_delete=models.CASCADE,         
                             )
 
     title = models.CharField(max_length=20,default="MyList")
@@ -18,6 +16,8 @@ class Todo_card(models.Model):
             'slug':self.slug
         })
 
+    class Meta:
+        ordering = ['-id']
 
     def __str__(self):
         return self.title
