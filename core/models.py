@@ -1,8 +1,32 @@
 from django.db import models
 from django.contrib.auth import settings
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from django.shortcuts import reverse 
 
 # Create your models here.
+class Profile(models.Model):
+    user = models.OneToOneField(User,
+                                on_delete=models.CASCADE)
+
+    profile_picture = models.ImageField(upload_to='media/profile_pic/')
+    slug = models.SlugField()
+
+    def get_absolute_url(self):
+        return reverse('core:profile',kwargs={
+            'slug':self.slug
+        })
+
+    @receiver(post_save,sender=User)
+    def create_profile(sender,instance,created,**kwargs):
+        if created:
+            Profile.objects.create(user=instance,slug=instance.username)
+
+    @receiver(post_save,sender=User)
+    def save_profile(sender,instance,**kwargs):
+        instance.profile.save()
+
 class Todo_card(models.Model):
     user = models.ForeignKey(settings.AUTH_USER_MODEL,
                                 on_delete=models.CASCADE,         

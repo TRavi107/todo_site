@@ -26,6 +26,7 @@
 
     <div id="all-card" class="row bootstrap snippets bootdeys">
         {% for card in object_list %}
+        {% if card.user == request.user %}
         <div class="col-lg-3 col-md-4 col-sm-6 content-card ">
             <div class="card-big-shadow">
                     <div class="card card-just-text" data-background="color" data-color="green" data-radius="none">
@@ -55,6 +56,7 @@
                     </div> <!-- end card -->
             </div>
         </div>
+        {% endif %}
         {% endfor %}
     </div>
 

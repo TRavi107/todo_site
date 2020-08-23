@@ -5,11 +5,22 @@ from django.contrib import messages
 from django.shortcuts import  get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 
-from .models import Todo_Items,Todo_card
-from .forms import Todo_form
+from .models import Todo_Items,Todo_card,Profile
+from .forms import Todo_form,Profile_form
 
 
 # Create your views here.
+
+class ProfilePage(DetailView):
+    model = Profile
+    template_name = 'profile.html'
+
+    def get_context_data(self,*args,**kwargs):
+        context = context = super().get_context_data(*args,**kwargs)
+        user = self.request.user
+        form = Profile_form
+        context['form']=form
+        return context
 
 class HomeView(ListView):
     model =Todo_card
