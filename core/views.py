@@ -102,7 +102,7 @@ class CardDetailView(DetailView,LoginRequiredMixin):
 def create_card(request):
     card = Todo_card(user=request.user)
     card.save()
-    card.slug = card.title + str(Todo_card.objects.count())
+    card.slug = card.title + str(card.created_time)
     card.save()
     return redirect('/')
 

@@ -37,6 +37,7 @@ class Todo_card(models.Model):
 
     title = models.CharField(max_length=20,default="MyList")
     slug = models.SlugField(blank=True,null=True)
+    created_time = models.TimeField(auto_now_add=True)
 
     def get_detail_url(self):
         return reverse('core:card_detail',kwargs={
