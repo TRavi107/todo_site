@@ -30,11 +30,11 @@ class ProfilePage(DetailView):
 
     def post(self,*args,**kwargs):
         form = Profile_form(self.request.POST or None)
+        profile = self.get_object()
         if form.is_valid():
             f_name = form.cleaned_data.get('name')
             s_name = form.cleaned_data.get('last_name')
             email = form.cleaned_data.get('email_id')
-            profile = self.get_object()
             profile.user.first_name =f_name
             profile.user.last_name = s_name
             profile.user.email = email
@@ -42,9 +42,8 @@ class ProfilePage(DetailView):
             profile.save() 
             return redirect('core:profile',slug=profile.slug)
 
-        messages.info(self.request,"Something wrong")
-        return redirect('/')
-
+        messages.info(self.request,form.errors)
+        return redirect('core:profile',slug=profile.slug)
 
 
 class HomeView(ListView):
