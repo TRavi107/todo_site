@@ -15,7 +15,7 @@
         {%else %}
         <div class="text-center">
         <a href="{% url 'core:create' %}">
-            <svg width="2em" height="2em" viewBox="0 0 16 16" class="bi bi-plus-square" fill="dark" xmlns="http://www.w3.org/2000/svg">
+            <svg width="2em" height="2em" viewBox="0 0 id16 16" class="bi bi-plus-square" fill="dark" xmlns="http://www.w3.org/2000/svg">
                 <path fill-rule="evenodd" d="M8 3.5a.5.5 0 0 1 .5.5v4a.5.5 0 0 1-.5.5H4a.5.5 0 0 1 0-1h3.5V4a.5.5 0 0 1 .5-.5z"/>
                 <path fill-rule="evenodd" d="M7.5 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0V8z"/>
                 <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
@@ -27,9 +27,10 @@
     <div id="all-card" class="row bootstrap snippets bootdeys">
         {% for card in object_list %}
         {% if card.user == request.user %}
-        <div class="col-lg-3 col-md-4 col-sm-6 content-card ">
+        <div data-url="{{card.get_delete_url}}" id="{{card.id}}card" class="col-lg-3 col-md-4 col-sm-6 content-card ">
             <div class="card-big-shadow">
                     <div class="card card-just-text" data-background="color" data-color="green" data-radius="none">
+                            <i onclick="_delete({{card.id}})" class="text-right fas fa-times mr-1"></i>
                             <div class="content">
                                 
                                 <h4 data-url="{{card.get_update_title_url}}" id="{{card.id}}title" onclick="edit_title({{card.id}})" class="title">{{card.title}}</h4>
@@ -63,6 +64,21 @@
 {% endblock%}
 {% block script %}
 <script>
+    function _delete(id){
+        const todo_card = document.getElementById(`${id}card`)
+        const url = todo_card.getAttribute('data-url')
+        $.ajax({
+            url:url,
+            success:function(response){
+                todo_card.remove()
+            },
+            error:function(error){
+              console.log(error)
+            }
+          })
+        
+
+    }
     function edit_title(id){
         const title_div = document.getElementById(id+'title')
         const text = title_div.innerHTML

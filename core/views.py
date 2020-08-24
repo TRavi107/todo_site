@@ -101,6 +101,15 @@ def create_card(request):
     card.save()
     return redirect('/')
 
+def delete_card(request,slug):
+    card = get_object_or_404(Todo_card,slug = slug)
+    try:
+        card.delete()
+        return JsonResponse({})
+    except ObjectDoesNotExist :
+        messages.info(request,"Object doesnot exits")
+        return JsonResponse({})
+
 def todo_actions(request,id,action):
     try:
         item = get_object_or_404(Todo_Items,id=id)

@@ -43,6 +43,11 @@ class Todo_card(models.Model):
             'slug':self.slug
         })
 
+    def get_delete_url(self):
+        return reverse('core:card_delete',kwargs={
+            'slug':self.slug
+        })
+
     class Meta:
         ordering = ['-id']
 
