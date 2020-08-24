@@ -1,17 +1,20 @@
 from django.shortcuts import render,redirect
 from django.http import JsonResponse
 from django.views.generic import View,ListView,DetailView
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib import messages
 from django.shortcuts import  get_object_or_404
 from django.core.exceptions import ObjectDoesNotExist
 
 from .models import Todo_Items,Todo_card,Profile
 from .forms import Todo_form,Profile_form
+from .filter import Card_Filter
 
 
 # Create your views here.
 
-class ProfilePage(DetailView):
+class ProfilePage(LoginRequiredMixin,DetailView):
     model = Profile
     template_name = 'profile.html'
 
@@ -56,7 +59,9 @@ class HomeView(ListView):
         context['todo_items']=todo_items
         return context
 
+    @login_required
     def post(self,*args,**kwargs):
+
         if 'title' in self.request.POST:
             title = self.request.POST.get("title")
             id = self.request.POST.get("id")
@@ -67,7 +72,7 @@ class HomeView(ListView):
 
         return redirect('.')
 
-class CardDetailView(DetailView):
+class CardDetailView(DetailView,LoginRequiredMixin):
     model =Todo_card
     template_name = 'detailview.html'
 
@@ -93,7 +98,7 @@ class CardDetailView(DetailView):
         messages.info(self.request,"Something wrong")
         return redirect('.')
 
-
+@login_required
 def create_card(request):
     card = Todo_card(user=request.user)
     card.save()
@@ -101,6 +106,7 @@ def create_card(request):
     card.save()
     return redirect('/')
 
+@login_required
 def delete_card(request,slug):
     card = get_object_or_404(Todo_card,slug = slug)
     try:
@@ -110,6 +116,7 @@ def delete_card(request,slug):
         messages.info(request,"Object doesnot exits")
         return JsonResponse({})
 
+@login_required
 def todo_actions(request,id,action):
     try:
         item = get_object_or_404(Todo_Items,id=id)
