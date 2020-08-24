@@ -22,7 +22,7 @@ class Profile_form(forms.Form):
         'placeholder':"sur name",
     }))
 
-    email_id = forms.CharField(widget=forms.TextInput(attrs={
+    email_id = forms.CharField(required=False,widget=forms.TextInput(attrs={
         'type':"text" ,
         'class':"form-control",
         'name':'email_id', 
