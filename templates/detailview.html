@@ -15,7 +15,7 @@
             <div id="{{item.id}}icons">
                 <div class="collapse text-right" id="collapseExample{{item.id}}">
                     <i id="{{item.id}}check" data-url="{{item.get_check_url}}" onclick="action('check',{{item.id}})" class="fas fa-check-circle mr-1"></i>
-                    <i id="{{item.id}}edit" data-url="{{item.get_edit_url}}" onclick="action('edit',{{item.id}})" class="fas fa-edit mr-1"></i> 
+                    <i id="{{item.id}}edit" onclick="edit_todo_contents({{item.id}})" class="fas fa-edit mr-1"></i> 
                     <i id="{{item.id}}delete" data-url="{{item.get_delete_url}}" onclick="action('delete',{{item.id}})" class="fas fa-times mr-1"></i>
                 </div>
             </div>
@@ -26,12 +26,20 @@
 
 {% block script %}
 <script>
+
+    function edit_todo_contents(id){
+        const todo_contents_div = document.getElementById(id+'content')
+        const text = todo_contents_div.innerHTML
+        const text_edt = document.createElement('div')
+        text_edt.innerHTML = '<form id="edit-title" method="POST" class="form-inline my-2 my-lg-0 justify-content-center">{% csrf_token %}<input name="item-edit" placeholder="'+text+ '"><input type="hidden" name="id" value="'+id+'"></form>'
+        todo_contents_div.replaceWith(text_edt)
+        console.log(text_edt)
+    }
     function action(action,id){
         const action_btn = document.getElementById(id+action)
         const url = action_btn.getAttribute('data-url')
         const content = document.getElementById(id+'content')
         const main = document.getElementById(id+'main')
-        const form = document.getElementById('add-form')
         const  icons = document.getElementById(id+'icons')
         $.ajax({
             type:'GET',
@@ -46,13 +54,9 @@
                         content.innerHTML = response.content
                     }
                 }
-                if(response.action=='edit'){
-                    main.innerHTML = '<input type="text" placeholder="'+response.content+'">' +icons.innerHTML
-                }
 
                 if(response.action =='delete'){
                     main.remove()
-                    console.log("Cksaks")
                 }
                 
             },

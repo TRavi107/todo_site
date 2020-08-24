@@ -86,6 +86,14 @@ class CardDetailView(DetailView,LoginRequiredMixin):
         return context
 
     def post(self,*args,**kwargs):
+        obj = self.get_object()
+        if 'item-edit' in self.request.POST :
+            id = self.request.POST.get('id')
+            text = self.request.POST.get('item-edit')
+            item = get_object_or_404(Todo_Items,id=id)
+            item.content = text
+            item.save()
+            return redirect('core:card_detail',slug = obj.slug)
         form = Todo_form(self.request.POST or None)
         if form.is_valid():
             contents = form.cleaned_data.get('contents')
@@ -97,8 +105,8 @@ class CardDetailView(DetailView,LoginRequiredMixin):
             }
             return JsonResponse(data)
 
-        messages.info(self.request,"Something wrong")
-        return redirect('.')
+        messages.info(self.request,"Could not edit")
+        return redirect('core:card_detail',slug = obj.slug)
 
 @login_required
 def create_card(request):
