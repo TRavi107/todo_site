@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve(strict=True).parent.parent
 SECRET_KEY = 'yjl-le8o%ixadodnji$00_t0=v#(#5etu(lk9d%cxc#r6th*(('
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0']
+ALLOWED_HOSTS = ['127.0.0.1','0.0.0.0','limitless-fjord-56807.herokuapp.com']
 
 
 # Application definition
