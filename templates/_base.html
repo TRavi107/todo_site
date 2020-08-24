@@ -73,7 +73,6 @@
 
 <body>
   <nav class="navbar navbar-dark bg-dark navbar-expand-lg ">
-    <a class="navbar-brand" href="{% url 'core:home' %}">Todo</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -91,13 +90,15 @@
       </form>
       
       {% if request.user.is_authenticated %}
+      <b><span class="text-light">{{request.user.username}}</span></b>
       <a href="{{request.user.profile.get_absolute_url}}">
       <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Image Description">
       </a>
       {% else %}
+      <a href="{% url 'account_login' %}"><b><span class="text-light ">Log in</span></b></a>
         <a href="{% url 'account_login' %}">
           <img class="d-flex g-width-50 g-height-50 rounded-circle g-mt-3 g-mr-15" src="https://bootdey.com/img/Content/avatar/avatar7.png" alt="Image Description">
-        </a>
+        
       {% endif %}
     </div>
   </nav>

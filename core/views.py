@@ -59,16 +59,18 @@ class HomeView(ListView):
         context['todo_items']=todo_items
         return context
 
-    @login_required
     def post(self,*args,**kwargs):
-
         if 'title' in self.request.POST:
             title = self.request.POST.get("title")
             id = self.request.POST.get("id")
             obj = get_object_or_404(Todo_card,id=id)
-            obj.title = title
-            obj.slug = title+str(id)
-            obj.save()
+            try:
+                obj.title = title
+                obj.slug = title+str(id)
+                obj.save()
+            except ObjectDoesNotExist:
+                messages.info(self.request,"Obejct not found")
+            
 
         return redirect('.')
 
