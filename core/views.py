@@ -17,10 +17,35 @@ class ProfilePage(DetailView):
 
     def get_context_data(self,*args,**kwargs):
         context = context = super().get_context_data(*args,**kwargs)
-        user = self.request.user
-        form = Profile_form
+        profile = self.get_object()
+        form = Profile_form(initial={
+            'name':profile.user.first_name,
+            'last_name':profile.user.last_name,
+            'email_id':profile.user.email,
+            }
+        )
+
         context['form']=form
         return context
+
+    def post(self,*args,**kwargs):
+        form = Profile_form(self.request.POST or None)
+        if form.is_valid():
+            f_name = form.cleaned_data.get('name')
+            s_name = form.cleaned_data.get('last_name')
+            email = form.cleaned_data.get('email_id')
+            profile = self.get_object()
+            profile.user.first_name =f_name
+            profile.user.last_name = s_name
+            profile.user.email = email
+            profile.user.save()
+            profile.save() 
+            return redirect('core:profile',slug=profile.slug)
+
+        messages.info(self.request,"Something wrong")
+        return redirect('/')
+
+
 
 class HomeView(ListView):
     model =Todo_card

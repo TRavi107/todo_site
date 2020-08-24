@@ -11,33 +11,24 @@ class Profile_form(forms.Form):
     name = forms.CharField(widget=forms.TextInput(attrs={
         'type':'text',
         'class':"form-control", 
+        'name':'name',
         'placeholder':"First name",
     }))
 
     last_name = forms.CharField(widget=forms.TextInput(attrs={
         'type':"text" ,
         'class':"form-control", 
+        'name':'last_name',
         'placeholder':"sur name",
-    }))
-
-    phone_number = forms.CharField(required=False,widget=forms.TextInput(attrs={
-        'type':"text" ,
-        'class':"form-control", 
-        'placeholder':"enter phone number",
-    }))
-
-    address = forms.CharField(required=False,widget=forms.TextInput(attrs={
-        'type':"text" ,
-        'class':"form-control", 
-        'placeholder':"Enter your address",
     }))
 
     email_id = forms.CharField(widget=forms.TextInput(attrs={
         'type':"text" ,
-        'class':"form-control", 
+        'class':"form-control",
+        'name':'email_id', 
         'placeholder':"Enter your email",
     }))
 
-    profile_pic = forms.ImageField()
+    profile_pic = forms.ImageField(required=False)
 
     
