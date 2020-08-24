@@ -161,7 +161,6 @@ def todo_actions(request,id,action):
     except ObjectDoesNotExist:
         pass
     
-    print(item.checked)
     return JsonResponse()
 
 

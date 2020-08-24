@@ -83,11 +83,6 @@
           <a class="nav-link" href="{% url 'core:home' %}">Home <span class="sr-only">(current)</span></a>
         </li>
       </ul>
-      <form class="form-inline my-2 my-lg-0"  method="post">
-        {% csrf_token %}
-        <input name="title-part" class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-        <button name="search-form" class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-      </form>
       
       {% if request.user.is_authenticated %}
       <b><span class="text-light">{{request.user.username}}</span></b>
